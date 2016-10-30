@@ -1,0 +1,25 @@
+{
+  "name": "express-ssi",
+  "version": "1.0.0",
+  "description": "add ssi parse for express 4.x.x",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "support",
+    "ssi",
+    "parse"
+  ],
+  "author": "midday<598535774@qq.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kidwm/node-ssi.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "sync-request": "^3.0.1",
+    "content-type": "~1.0.2"
+  }
+}
