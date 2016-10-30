@@ -15,7 +15,7 @@
   "author": "midday<598535774@qq.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kidwm/node-ssi.git"
+    "url": "https://github.com/midday/express-ssi.git"
   },
   "license": "MIT",
   "dependencies": {
