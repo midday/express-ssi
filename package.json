@@ -1,7 +1,7 @@
 {
   "name": "express-ssi",
   "version": "1.0.0",
-  "description": "add ssi parse for express 4.x.x",
+  "description": "Add SSI Support To Express",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
