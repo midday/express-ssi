@@ -2,39 +2,49 @@ var request = require('sync-request');
 var contentType = require('content-type');
 
 /**
- * express-ssi init method
+ * Express-ssi init method
+ * 
  * @param {Object} express
- * @param {String} ssiServer,default value:"http://atguat.com.cn"
+ * @param {String} ssiServer,default value:"http://www.atguat.com.cn"
  * @api public
  */
-module.export.init = function(express,ssiServer) {
-    ssiServer = ssiServer || 'http://atguat.com.cn';
+module.exports.init = function(express, ssiServer) {
+    ssiServer = ssiServer || 'http://www.atguat.com.cn';
 
-    var send = express.response.send;
-    var responseEndCodeRegExp = /this\.end\((.+?)encoding\);/g;
-    var ssiFunction = 'replaceContentBySSITagParse(ssiServer, chunk);';
+    var sendMethodRegExp = /function(\s*?)((send)*)(\s*?)\(body\)(\s*?)\{/g;
+    var ssiMethod = 'body = replaceContentBySSITagParse(ssiServer, body);';
 
-    //overide express-response send function，add ssi parse
-    //below the 4.6 version match keywords==>this.end(chunk, encoding);
-    //version 4.6 and above match keywords==>this.end((head ? null : body), encoding);
-    express.response.send = eval(send.toString().replace(responseEndCodeRegExp, function(responseEndCode) {
-        return ssiFunction + responseEndCode;
-    }));
-}
+    //Override express-response send method and add ssi parse,generate new send method
+    var newSendMethod = express.response.send.toString().replace(sendMethodRegExp, function(sendMethod) {
+        return sendMethod + 'if(typeof(body) === "string"){' + ssiMethod + '}';
+    });
+
+    //Dynamic execution of the new send method
+    eval('express.response.send = ' + newSendMethod);
+};
 
 /**
- * Replace content by ssi tag parse
+ * Replace body content by ssi tag parse
  *
  * @param {String} ssiDomain
- * @param {String} content
+ * @param {String} body
  * @api private
  */
-function replaceContentBySSITagParse(ssiServer, content) {
+function replaceContentBySSITagParse(ssiServer, body) {
     var ssiTagRegExp = /<!--[ ]*#([a-z]+)([ ]+([a-z]+)="(.+?)")*[ ]*-->/g;
 
-    content = content.replace(ssiTagRegExp, function(ssiTag) {
+    return body.replace(ssiTagRegExp, function(ssiTag) {
         var path = ssiTag.match(/"(.+?)"/gim)[0].replace(/"/g, '');
-        return request('GET', ssiDomain + path).getBody().toString();
+        var ssiResponse;
+
+        try{
+            ssiResponse = request('GET', ssiServer + path).getBody().toString();
+        }catch(e){
+            console.log('[express ssi]:fetch ssi request failed! pleace check ssi tag:'+ssiTag);
+            ssiResponse = ssiTag;
+        }
+
+        return ssiResponse;
     });
 }
 
@@ -55,4 +65,4 @@ function setCharset(type, charset) {
     parsed.parameters.charset = charset;
 
     return contentType.format(parsed);
-};
+}
