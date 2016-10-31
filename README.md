@@ -32,6 +32,6 @@ expressSSI.init(express,ssiServer);
 #### init(express, ssiServer)
 _filename_ `Object` express object
 
-_ssiServer_ `String` ssiServer address,default:"http://atguat.com.cn"
+_ssiServer_ `String` ssiServer address,default:"http://www.atguat.com.cn"
 
 MIT
