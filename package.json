@@ -1,6 +1,6 @@
 {
   "name": "express-ssi",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Add SSI Support To Express",
   "main": "index.js",
   "scripts": {
